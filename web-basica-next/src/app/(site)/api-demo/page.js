@@ -2,6 +2,9 @@
 //Esto nos facilita las cosas porque no necesitamos preocuparnos por el estado ni por los eventos
 
 async function getData() {
+  // Simulem retard de 1 segon per a veure el loader
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
   const res = await fetch("https://jsonplaceholder.typicode.com/posts/1", {
     next: { revalidate: 60 },
   });
