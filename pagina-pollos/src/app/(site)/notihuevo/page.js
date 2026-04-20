@@ -1,12 +1,28 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import news from "./../../../../public/noticias";
 
 export default function Home() {
-  const allNews = news;
+  const [allNews, setAllNews] = useState(news);
 
-  // Ordenar por fecha descendente y tomar las 3 más recientes
-  const latestNews = allNews.sort(
+  // Cargar noticias nuevas del localStorage
+  useEffect(() => {
+    const noticiasGuardadas = localStorage.getItem("noticias");
+    if (noticiasGuardadas) {
+      try {
+        const noticiasNuevas = JSON.parse(noticiasGuardadas);
+        setAllNews([...news, ...noticiasNuevas]);
+      } catch (error) {
+        console.error("Error cargando noticias:", error);
+      }
+    }
+  }, []);
+
+  // Ordenar por fecha descendente
+  const latestNews = [...allNews].sort(
     (a, b) => new Date(b.date) - new Date(a.date),
   );
 
@@ -14,7 +30,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8">
       <main className="text-center">
         <h1 className="text-5xl font-bold text-yellow-800 mb-8">
-          🐔 EL notiHuevo
+          🐔 El notiHuevo
         </h1>
         <section className="mb-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

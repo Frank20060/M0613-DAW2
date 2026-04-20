@@ -1,18 +1,64 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { useParams } from "next/navigation";
 import news from "./../../../../../public/noticias";
 
-export function generateStaticParams() {
-  return news.map((p) => ({ id: p.id }));
-}
+export default function Home() {
+  const params = useParams();
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-export default async function Home({ params }) {
-  const allNews = news;
+  useEffect(() => {
+    const { id } = params;
 
-  // Ordenar por fecha descendente y tomar las 3 más recientes
-  const { id } = await params;
-  const post = allNews.find((p) => p.id === id);
-  if (!post) notFound();
+    // Buscar en noticias base
+    let encontrada = news.find((p) => p.id === id);
+
+    // Si no está en base, buscar en localStorage
+    if (!encontrada) {
+      const noticiasGuardadas = localStorage.getItem("noticias");
+      if (noticiasGuardadas) {
+        try {
+          const noticiasNuevas = JSON.parse(noticiasGuardadas);
+          encontrada = noticiasNuevas.find((p) => p.id === id);
+        } catch (error) {
+          console.error("Error cargando noticias:", error);
+        }
+      }
+    }
+
+    setPost(encontrada || null);
+    setLoading(false);
+  }, [params]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-xl text-gray-600">Cargando noticia...</p>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-2xl font-bold text-gray-800 mb-4">
+            Noticia no encontrada 🐔
+          </p>
+          <a
+            href="/notihuevo"
+            className="inline-flex items-center px-6 py-3 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-700 transition-colors"
+          >
+            ← Volver a noticias
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-amber-50">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -21,8 +67,7 @@ export default async function Home({ params }) {
             <img
               src={post.image}
               alt={post.title}
-              fill
-              className="object-cover"
+              className="w-full h-full object-cover"
             />
           </div>
 
@@ -48,15 +93,17 @@ export default async function Home({ params }) {
               {post.description}
             </p>
 
-            <div className="border-t border-gray-200 pt-8">
-              <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                {post.body.split("\n\n").map((paragraph, index) => (
-                  <p key={index} className="mb-4">
-                    {paragraph}
-                  </p>
-                ))}
+            {post.body && (
+              <div className="border-t border-gray-200 pt-8">
+                <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+                  {post.body.split("\n\n").map((paragraph, index) => (
+                    <p key={index} className="mb-4">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="border-t border-gray-200 mt-8 pt-6">
               <div className="flex items-center">

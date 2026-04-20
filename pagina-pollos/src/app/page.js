@@ -14,7 +14,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8">
       <main className="text-center">
         <h1 className="text-5xl font-bold text-yellow-800 mb-8">
-          🐔 EL CORRAL
+          🐔 El corral
         </h1>
         <p className="text-lg text-gray-700 mb-12">
           Mantente al día con las últimas noticias del mundo avícola
