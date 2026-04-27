@@ -19,6 +19,36 @@ export default function Home() {
         console.error("Error cargando noticias:", error);
       }
     }
+
+    /* ALTERNATIVA: Cargar noticias desde API en localhost:8000
+    const cargarNoticiasDesdeAPI = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/noticias');
+        if (response.ok) {
+          const noticiasDelAPI = await response.json();
+          setAllNews([...news, ...noticiasDelAPI]);
+        } else {
+          console.error('Error en la respuesta de la API:', response.status);
+          // Fallback: usar solo las noticias por defecto
+          setAllNews(news);
+        }
+      } catch (error) {
+        console.error('Error cargando noticias desde API:', error);
+        // Fallback: intentar cargar del localStorage
+        const noticiasGuardadas = localStorage.getItem("noticias");
+        if (noticiasGuardadas) {
+          try {
+            const noticiasNuevas = JSON.parse(noticiasGuardadas);
+            setAllNews([...news, ...noticiasNuevas]);
+          } catch (err) {
+            console.error("Error cargando del localStorage:", err);
+            setAllNews(news);
+          }
+        }
+      }
+    };
+    cargarNoticiasDesdeAPI();
+    */
   }, []);
 
   // Ordenar por fecha descendente

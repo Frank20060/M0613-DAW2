@@ -28,6 +28,34 @@ export default function FormAddNews() {
         console.error("Error cargando noticias:", error);
       }
     }
+
+    /* ALTERNATIVA: Cargar noticias desde API en localhost:8000
+    useEffect(() => {
+      const cargarNoticiasDesdeAPI = async () => {
+        try {
+          const response = await fetch('http://localhost:8000/api/noticias');
+          if (response.ok) {
+            const data = await response.json();
+            setNoticiasNuevas(data);
+          } else {
+            console.error('Error en la respuesta de la API:', response.status);
+          }
+        } catch (error) {
+          console.error('Error cargando noticias desde API:', error);
+          // Fallback: usar localStorage si falla la API
+          const noticiasGuardadas = localStorage.getItem("noticias");
+          if (noticiasGuardadas) {
+            try {
+              setNoticiasNuevas(JSON.parse(noticiasGuardadas));
+            } catch (err) {
+              console.error("Error cargando noticias del localStorage:", err);
+            }
+          }
+        }
+      };
+      cargarNoticiasDesdeAPI();
+    }, []);
+    */
   }, []);
 
   // Calcular total de noticias
@@ -83,6 +111,50 @@ export default function FormAddNews() {
       `✅ Noticia añadida exitosamente! Total de noticias: ${totalNoticias + 1}`,
     );
     setTimeout(() => setMensaje(""), 3000);
+
+    /* ALTERNATIVA: Enviar noticia a API en localhost:8000 mediante POST
+    const enviarNoticiaAAPI = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/noticias', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newNoticia),
+        });
+
+        if (response.ok) {
+          const datosGuardados = await response.json();
+          setNoticiasNuevas([...noticiasNuevas, datosGuardados]);
+          
+          // Resetear formulario
+          setFormData({
+            id: "",
+            title: "",
+            description: "",
+            image: "",
+            date: new Date().toISOString().split("T")[0],
+            author: "",
+            category: "",
+            body: "",
+          });
+
+          setMensaje(
+            `✅ Noticia añadida exitosamente! Total de noticias: ${totalNoticias + 1}`,
+          );
+          setTimeout(() => setMensaje(""), 3000);
+        } else {
+          setMensaje("❌ Error al guardar la noticia en la API");
+          setTimeout(() => setMensaje(""), 3000);
+        }
+      } catch (error) {
+        console.error('Error enviando noticia a la API:', error);
+        setMensaje("❌ Error de conexión con la API");
+        setTimeout(() => setMensaje(""), 3000);
+      }
+    };
+    enviarNoticiaAAPI();
+    */
   };
 
   const handleDelete = (id) => {
@@ -121,7 +193,7 @@ export default function FormAddNews() {
         {/* Formulario */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <h1 className="text-3xl font-bold text-yellow-800 mb-6">
-          Añadir Nueva Noticia
+            Añadir Nueva Noticia
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">

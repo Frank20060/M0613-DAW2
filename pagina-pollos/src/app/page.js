@@ -1,6 +1,5 @@
-
 import Link from "next/link";
-import news from "./../../public/noticias"
+import news from "./../../public/noticias";
 
 export default function Home() {
   const allNews = news;
@@ -9,6 +8,42 @@ export default function Home() {
   const latestNews = allNews
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 3);
+
+  /* ALTERNATIVA: Cargar noticias desde API en localhost:8000
+  // Para usar esta alternativa, el componente debe ser "use client"
+  // y usar useState y useEffect:
+  
+  'use client';
+  import { useState, useEffect } from 'react';
+  
+  export default function Home() {
+    const [allNews, setAllNews] = useState(news);
+    
+    useEffect(() => {
+      const cargarNoticiasDesdeAPI = async () => {
+        try {
+          const response = await fetch('http://localhost:8000/api/noticias');
+          if (response.ok) {
+            const noticiasDelAPI = await response.json();
+            setAllNews([...news, ...noticiasDelAPI]);
+          } else {
+            console.error('Error en la respuesta de la API:', response.status);
+          }
+        } catch (error) {
+          console.error('Error cargando noticias desde API:', error);
+          // Usar las noticias por defecto si falla
+          setAllNews(news);
+        }
+      };
+      cargarNoticiasDesdeAPI();
+    }, []);
+    
+    const latestNews = [...allNews]
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 3);
+    
+    // ... resto del JSX igual
+  */
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -46,9 +81,7 @@ export default function Home() {
                   <p className="text-gray-600 mb-4">{noticia.description}</p>
                   <div className="flex justify-between items-center text-sm text-gray-500">
                     <span>{noticia.author}</span>
-                    <span>
-                      {noticia.date}
-                    </span>
+                    <span>{noticia.date}</span>
                   </div>
                   <span className="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full mt-2">
                     {noticia.category}
