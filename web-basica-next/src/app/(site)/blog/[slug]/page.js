@@ -1,13 +1,16 @@
 import { notFound } from "next/navigation";
-import { posts } from "../data";
+import { prisma } from "@/lib/prisma";
 
-export function generateStaticParams() {
-  return posts.map((p) => ({ slug: p.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function BlogPostPage({ params }) {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+
+  // Consulta para que se ponga el unico
+  const post = await prisma.post.findUnique({
+    where: { slug },
+  });
+
   if (!post) notFound();
 
   return (
@@ -18,4 +21,3 @@ export default async function BlogPostPage({ params }) {
     </article>
   );
 }
-
