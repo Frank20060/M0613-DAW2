@@ -1,5 +1,5 @@
 import { PrismaClient } from "../src/generated/prisma/index.js";
-import { PrismaPg } from "@/src/prisma/adapter-pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
 const pool = new Pool({
