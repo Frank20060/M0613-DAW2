@@ -8,7 +8,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 // Que tipo de db vamos a usar
