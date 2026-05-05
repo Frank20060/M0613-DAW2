@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
-
+import bcrypt from "bcryptjs";
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
@@ -14,22 +14,24 @@ async function main() {
   console.log("Iniciant el procés de seed...");
 
   // 1. Crear Usuaris
+  const passwordHash = bcrypt.hashSync("demo1234", 10);
+
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
+    where: { email: 'admin@demo.local' },
     update: {},
     create: {
-      email: 'admin@example.com',
-      passwordHash: 'hashed_password_admin', // Reemplaçar per hash real si cal
+      email: 'admin@demo.local',
+      passwordHash: passwordHash, // Reemplaçar per hash real si cal
       role: 'ADMIN',
     },
   });
 
   const editor = await prisma.user.upsert({
-    where: { email: 'editor@example.com' },
+    where: { email: 'editor@demo.local' },
     update: {},
     create: {
-      email: 'editor@example.com',
-      passwordHash: 'hashed_password_editor',
+      email: 'editor@demo.local',
+      passwordHash: passwordHash,
       role: 'EDITOR',
     },
   });
