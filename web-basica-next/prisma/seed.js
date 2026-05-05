@@ -13,7 +13,7 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("Iniciant el procés de seed...");
 
-  // 1. Crear Usuaris
+  // Crear Usuaris
   const passwordHash = bcrypt.hashSync("demo1234", 10);
 
   const admin = await prisma.user.upsert({
@@ -38,7 +38,7 @@ async function main() {
 
   console.log(`Usuaris creats: ${admin.email}, ${editor.email}`);
 
-  // 2. Crear Posts
+  // Crear Posts
   const posts = [
     {
       slug: "benvinguts-al-blog",
