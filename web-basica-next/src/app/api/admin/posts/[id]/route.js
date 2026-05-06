@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireEditor } from "@/lib/api-auth";
+import { requireEditor } from "@/src/lib/api-auth";
 
 export async function GET(request, context) {
   const sessionAuth = await requireEditor();
